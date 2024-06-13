@@ -1,0 +1,97 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.4.0"
+    id("com.google.cloud.tools.jib") version "2.8.0"
+    id("io.micronaut.aot") version "4.4.0"
+}
+
+version = "0.1"
+group = "dev.lapysh"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.fasterxml.jackson.module:jackson-module-afterburner:2.17.1")
+    implementation("commons-io:commons-io:2.16.1")
+    testImplementation("org.awaitility:awaitility:4.2.1")
+    annotationProcessor("org.projectlombok:lombok")
+//    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+//    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    implementation("io.micrometer:context-propagation")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("io.micronaut:micronaut-management")
+    implementation ("org.apache.commons:commons-pool2:2.12.0")
+    implementation("io.micronaut.cache:micronaut-cache-hazelcast")
+//    implementation("io.micronaut.data:micronaut-data-r2dbc")
+    implementation("io.micronaut.liquibase:micronaut-liquibase")
+    implementation("io.micronaut.micrometer:micronaut-micrometer-core")
+    implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.reactor:micronaut-reactor-http-client")
+//    implementation("io.micronaut.sql:micronaut-jooq")
+    implementation("org.jooq:jooq:3.19.9")
+//    implementation("io.micronaut.validation:micronaut-validation")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("jakarta.validation:jakarta.validation-api")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.r2dbc:r2dbc-pool")
+    implementation("org.postgresql:postgresql")
+    implementation("org.postgresql:r2dbc-postgresql")
+    runtimeOnly("org.yaml:snakeyaml")
+    testImplementation("org.assertj:assertj-core")
+    testImplementation("org.junit.platform:junit-platform-suite-engine")
+    testImplementation("org.mockito:mockito-core")
+    developmentOnly("io.micronaut.controlpanel:micronaut-control-panel-management")
+    developmentOnly("io.micronaut.controlpanel:micronaut-control-panel-ui")
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation "org.testcontainers:postgresql"
+    testImplementation "io.micronaut:micronaut-http-client"
+
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("io.micronaut.reactor:micronaut-reactor-http-client")
+
+    testImplementation("io.micronaut.test:micronaut-test-rest-assured")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("org.testcontainers:testcontainers")
+
+
+}
+
+application {
+    mainClass = "dev.lapysh.Application"
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("22")
+    targetCompatibility = JavaVersion.toVersion("22")
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(22))
+    }
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("dev.lapysh.*")
+    }
+    aot {
+        deduceEnvironment = true
+    }
+}
+
+tasks.named("dockerfileNative") {
+    jdkVersion = "21"
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs = ['-XX:+UseZGC']
+}

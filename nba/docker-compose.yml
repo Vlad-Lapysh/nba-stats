@@ -1,0 +1,96 @@
+services:
+  nba-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # workaround from https://github.com/docker/compose/issues/7188#issuecomment-1586986236
+      - target: 8080
+      - target: 5005
+    networks:
+      - nba-network
+    environment:
+      - reactor.schedulers.defaultBoundedElasticOnVirtualThreads=true
+      - MICRONAUT_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - MICRONAUT_DATASOURCE_USERNAME=postgres
+      - MICRONAUT_DATASOURCE_PASSWORD=postgres
+      - MICRONAUT_R2DBC_DATASOURCE_URL=r2dbc:postgresql://postgres:5432/postgres
+      - MICRONAUT_R2DBC_DATASOURCE_USERNAME=postgres
+      - MICRONAUT_R2DBC_DATASOURCE_PASSWORD=postgres
+      - DB_HOST=postgres
+#      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    depends_on:
+      postgres:
+        condition: service_healthy
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 500M
+          cpus: '2.0'
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+          cpus: '10.0'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - nba-network
+    depends_on:
+      - nba-app
+
+  postgres:
+    image: postgres:latest
+    shm_size: 300mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MAX_CONNECTIONS: 200
+    ports:
+      - "5432:5432"
+    networks:
+      - nba-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 500M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  hazelcast-management-center:
+    image: hazelcast/management-center:5.4.1
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 200M
+    ports:
+      - "8081:8080"
+    environment:
+      - MC_DEFAULT_CLUSTER=dev
+      - MC_DEFAULT_CLUSTER_MEMBERS=nba-nba-app-1,nba-nba-app-2,nba-nba-app-3
+    networks:
+      - nba-network
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  nba-network:
+    driver: bridge

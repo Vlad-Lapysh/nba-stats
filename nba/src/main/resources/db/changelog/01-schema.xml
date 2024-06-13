@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-players_data" author="VL">
+        <sql>
+            CREATE TABLE players_data
+            (
+                id             UUID NOT NULL,
+                player_name    TEXT NOT NULL,
+                team_name      TEXT NOT NULL,
+                season_name    TEXT NOT NULL,
+                game_id        UUID,
+                points         SMALLINT,
+                rebounds       SMALLINT,
+                assists        SMALLINT,
+                steals         SMALLINT,
+                blocks         SMALLINT,
+                fouls          SMALLINT,
+                turnovers      SMALLINT,
+                minutes_played REAL,
+                created_at     TIMESTAMP WITHOUT TIME ZONE
+            ) PARTITION BY HASH (season_name);
+            -- Create partitions for the players_data table
+            CREATE TABLE players_data_1 PARTITION OF players_data
+                FOR VALUES WITH (MODULUS 3, REMAINDER 0);
+            CREATE TABLE players_data_2 PARTITION OF players_data
+                FOR VALUES WITH (MODULUS 3, REMAINDER 1);
+            CREATE TABLE players_data_3 PARTITION OF players_data
+                FOR VALUES WITH (MODULUS 3, REMAINDER 2);
+            CREATE INDEX idx_season_name_player_name ON players_data (season_name, player_name);
+            CREATE INDEX idx_season_name_team_name ON players_data (season_name, team_name);
+        </sql>
+    </changeSet>
+
+    <changeSet id="02-statistics_players" author="VL">
+        <createTable tableName="statistics_players">
+            <column name="player_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="season_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avg_points" type="double precision"/>
+            <column name="avg_rebounds" type="double precision"/>
+            <column name="avg_assists" type="double precision"/>
+            <column name="avg_steals" type="double precision"/>
+            <column name="avg_blocks" type="double precision"/>
+            <column name="avg_fouls" type="double precision"/>
+            <column name="avg_turnovers" type="double precision"/>
+            <column name="avg_minutes_played" type="double precision"/>
+            <column name="count_of_rows" type="integer"/>
+            <column name="updated_at" type="timestamp without time zone"/>
+        </createTable>
+
+        <addPrimaryKey
+                columnNames="player_name,season_name"
+                constraintName="pk_statistics_players"
+                tableName="statistics_players"/>
+
+        <createIndex indexName="idx_statistics_players" tableName="statistics_players">
+            <column name="player_name"/>
+            <column name="season_name"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="03-statistics_teams" author="VL">
+        <createTable tableName="statistics_teams">
+            <column name="team_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="season_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avg_points" type="double precision"/>
+            <column name="avg_rebounds" type="double precision"/>
+            <column name="avg_assists" type="double precision"/>
+            <column name="avg_steals" type="double precision"/>
+            <column name="avg_blocks" type="double precision"/>
+            <column name="avg_fouls" type="double precision"/>
+            <column name="avg_turnovers" type="double precision"/>
+            <column name="avg_minutes_played" type="double precision"/>
+            <column name="count_of_rows" type="integer"/>
+            <column name="updated_at" type="timestamp without time zone"/>
+        </createTable>
+
+        <addPrimaryKey
+                columnNames="team_name,season_name"
+                constraintName="pk_statistics_teams"
+                tableName="statistics_teams"/>
+
+        <createIndex indexName="idx_statistics_teams" tableName="statistics_teams">
+            <column name="team_name"/>
+            <column name="season_name"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

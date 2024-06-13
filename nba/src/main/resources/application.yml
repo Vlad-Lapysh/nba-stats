@@ -1,0 +1,50 @@
+micronaut:
+  application:
+    name: nba
+    default-jvm-args: "-Dreactor.schedulers.defaultBoundedElasticOnVirtualThreads=true"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT30S
+    enabled: true
+datasources:
+  default:
+    url: ${MICRONAUT_DATASOURCE_URL:`jdbc:postgresql://localhost:5432/postgres`}
+    username: ${MICRONAUT_DATASOURCE_USERNAME:postgres}
+    password: ${MICRONAUT_DATASOURCE_PASSWORD:postgres}
+r2dbc:
+  datasources:
+    r2dbc:
+      #      url: ${MICRONAUT_R2DBC_DATASOURCE_URL:`r2dbc:pool:postgresql://localhost:5432/postgres`}
+      dialect: POSTGRES
+      username: ${MICRONAUT_R2DBC_DATASOURCE_USERNAME:postgres}
+      password: ${MICRONAUT_R2DBC_DATASOURCE_PASSWORD:postgres}
+      host: ${DB_HOST:localhost}
+      port: ${DB_PORT:5432}
+      options:
+        initial-size: 10
+        max-size: 20
+liquibase:
+  enabled: true
+  datasources:
+    default:
+      enabled: false
+      change-log: classpath:db/liquibase-changelog.xml
+      default-schema: public
+endpoints:
+  all:
+    enabled: true
+    sensitive: false
+  health:
+    details-visible: ANONYMOUS
+  loggers:
+    write-sensitive: false
+jooq:
+  datasources:
+    default:
+      sql-dialect: POSTGRES
+  r2dbc-datasources:
+    r2dbc:
+      sql-dialect: POSTGRES
