@@ -3,10 +3,10 @@ name: Build and Test
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -28,10 +28,12 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x nba/gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
+        working-directory: nba
 
       - name: Run tests with Gradle
         run: ./gradlew test
+        working-directory: nba
