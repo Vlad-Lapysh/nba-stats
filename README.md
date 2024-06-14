@@ -68,10 +68,12 @@ Java, Micronaut, PostgreSQL, Hazelcast, Docker, NGINX, Gradle, Liquibase, JUnit,
 |                                                                        | **G1 GC:** Good performance, low pause times, tunable for optimization.                                                                       | **G1 GC:** Higher pause times than ZGC, complex tuning, higher fragmentation over time.                             |                                                                                                                                                                                  |
 |                                                                        | **Shenandoah GC:** Low pause times, concurrent compacting, suitable for large heaps.                                                          | **Shenandoah GC:** Newer and less mature, limited documentation, potentially higher CPU overhead.                   |                                                                                                                                                                                  |
 |                                                                        | **CMS GC:** Long history, lower pause times, good for smaller heaps.                                                                          | **CMS GC:** Deprecated post JDK 9, fragmentation issues, less efficient for large heaps.                            |                                                                                                                                                                                  |
+| **JSON vs. Protobuf vs. Avro vs. XML**                                 | **JSON:** Human-readable, easy to use, widely supported.                                                                                      | **JSON:** Higher overhead, less efficient serialization.                                                            | **JSON** was chosen for its simplicity, human-readability, and ease of integration despite its higher overhead.                                                                  |
+|                                                                        | **Protobuf:** Efficient, compact, supports versioning.                                                                                        | **Protobuf:** More complex, requires schema definition.                                                             |                                                                                                                                                                                  |
+|                                                                        | **Avro:** Compact, supports dynamic schemas, good for big data.                                                                               | **Avro:** Requires schema definition, less human-readable.                                                          |                                                                                                                                                                                  |
+|                                                                        | **XML:** Highly flexible, supports complex data structures, widely supported.                                                                 | **XML:** Verbose, higher overhead, slower processing.                                                               |                                                                                                                                                                                  |
 
-## API Overview
-
-Below is a brief description of the API endpoints:
+# API Overview
 
 1. **POST /save**: Save player game data.
     - **Request Body**:
@@ -151,9 +153,12 @@ Below is a brief description of the API endpoints:
 #### PACELC Theorem Choices
 
 - **Partition (P) occurs**:
-    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
+    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using
+      Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
 - **Else (E), no partition**:
-    - **Latency (L) over Consistency (C)**: Under normal conditions, the system prioritizes latency, ensuring low response times and high throughput. This is achieved by keeping all statistics data in memory with Hazelcast, which improves performance even though it may sacrifice some level of consistency.
+    - **Latency (L) over Consistency (C)**: Under normal conditions, the system prioritizes latency, ensuring low
+      response times and high throughput. This is achieved by keeping all statistics data in memory with Hazelcast,
+      which improves performance even though it may sacrifice some level of consistency.
 
 ---
 
@@ -223,12 +228,11 @@ Used setup from [Docker Compose](docker-compose.yml) with 3 instances of `nba-sv
 We'll use the following assumptions:
 
 - **EC2 Instance Type**: t3.medium (2 vCPUs, 4 GB RAM).
-  - $0.0416 per hour, $29.95 per month, $359.40 per year.
+    - $0.0416 per hour, $29.95 per month, $359.40 per year.
 - **Amazon RDS**: Using RDS for PostgreSQL with db.t3.medium instance.
-  - $0.0416 per hour, $29.95 per month, $359.40 per year.
+    - $0.0416 per hour, $29.95 per month, $359.40 per year.
 - **Storage**: $0.115 per GB-month for General Purpose SSD (gp2).
-  - $0.115 per GB-month for General Purpose SSD (gp2).
-
+    - $0.115 per GB-month for General Purpose SSD (gp2).
 
 ### Cost Estimation Table
 
