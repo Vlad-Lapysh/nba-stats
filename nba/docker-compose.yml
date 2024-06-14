@@ -1,5 +1,7 @@
+name: nba-compose
+
 services:
-  nba-app:
+  nba-svc:
     build:
       context: .
       dockerfile: Dockerfile
@@ -46,7 +48,7 @@ services:
     networks:
       - nba-network
     depends_on:
-      - nba-app
+      - nba-svc
 
   postgres:
     image: postgres:latest
