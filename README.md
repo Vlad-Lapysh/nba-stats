@@ -153,7 +153,7 @@ Transfer-Encoding: chunked
 - **50th Percentile (Median) Response Time**: 21.0 ms
 - **99th Percentile Response Time**: 58.01 ms
 
-### Combined GET and POST Requests:
+### Combined GET and POST Requests (20/80):
 - **Average Response Time**: 42.31 ms
 - **Success Rate**: 100%
 - **Throughput**: 668.28 requests/second
@@ -165,29 +165,7 @@ Transfer-Encoding: chunked
 Used setup from Docker Compose with 3 instances of `nba-svc`:
 - **Resources per service**: 2 CPU cores (AMD Ryzen 7 5800X), 700MB RAM
 - **Load profiles**: Only GET, Only POST, GET/POST (20/80)
-
-Docker Compose configuration:
-```yaml
-name: nba-compose
-services:
-  nba-svc:
-    build: .
-    ports: [8080, 5005]
-    deploy: { replicas: 3, resources: { limits: { memory: 700M, cpus: '2.0' } }, restart_policy: { condition: on-failure, max_attempts: 1 } }
-  nginx:
-    image: nginx:stable-alpine
-    ports: ["8080:80"]
-  postgres:
-    image: postgres:latest
-    environment: { POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres }
-    ports: ["5432:5432"]
-    deploy: { resources: { limits: { cpus: '2.0', memory: 500M } } }
-  hazelcast-management-center:
-    image: hazelcast/management-center:5.4.1
-    ports: ["8081:8080"]
-networks:
-  nba-network: { driver: bridge }
-```
+- **JMeter** 5.6 used
 
 #### Only GET requests
 
