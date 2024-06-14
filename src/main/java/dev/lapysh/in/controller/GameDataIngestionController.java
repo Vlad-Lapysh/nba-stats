@@ -1,7 +1,7 @@
 package dev.lapysh.in.controller;
 
-import dev.lapysh.in.model.PlayerGameData;
 import dev.lapysh.core.PlayerService;
+import dev.lapysh.in.model.PlayerGameData;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;

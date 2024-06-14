@@ -23,6 +23,7 @@ public class HazelcastInitializer
         LOG.info("Initializing Hazelcast after Liquibase migrations...");
         // Touch map to start init process
         hazelcastInstance.getMap("playerDataMap");
+        hazelcastInstance.getMap("teamDataMap");
         LOG.info("Hazelcast initialization completed.");
     }
 }

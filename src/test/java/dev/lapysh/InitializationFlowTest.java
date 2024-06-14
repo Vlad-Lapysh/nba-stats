@@ -164,11 +164,14 @@ public class InitializationFlowTest implements TestPropertyProvider {
             playersData.stream().map(data ->
                 dslContext.insertInto(table("players_data"),
                         field("id"), field("player_name"), field("team_name"), field("season_name"), field("game_id"),
-                        field("points"), field("rebounds"), field("assists"), field("steals"), field("blocks"), field("fouls"),
+                        field("points"), field("rebounds"), field("assists"), field("steals"), field("blocks"),
+                        field("fouls"),
                         field("turnovers"), field("minutes_played"), field("created_at"))
                     .values(
-                        data.get("id"), data.get("player_name"), data.get("team_name"), data.get("season_name"), data.get("game_id"),
-                        data.get("points"), data.get("rebounds"), data.get("assists"), data.get("steals"), data.get("blocks"),
+                        data.get("id"), data.get("player_name"), data.get("team_name"), data.get("season_name"),
+                        data.get("game_id"),
+                        data.get("points"), data.get("rebounds"), data.get("assists"), data.get("steals"), data.get(
+                            "blocks"),
                         data.get("fouls"), data.get("turnovers"), data.get("minutes_played"), data.get("created_at"))
             ).collect(Collectors.toList())
         )).blockLast();
@@ -182,18 +185,28 @@ public class InitializationFlowTest implements TestPropertyProvider {
                 entry -> {
                     List<Map<String, Object>> stats = entry.getValue();
                     int count = stats.size();
-                    double avgPoints = stats.stream().mapToDouble(data -> (int) data.get("points")).average().orElse(0.0);
-                    double avgRebounds = stats.stream().mapToDouble(data -> (int) data.get("rebounds")).average().orElse(0.0);
-                    double avgAssists = stats.stream().mapToDouble(data -> (int) data.get("assists")).average().orElse(0.0);
-                    double avgSteals = stats.stream().mapToDouble(data -> (int) data.get("steals")).average().orElse(0.0);
-                    double avgBlocks = stats.stream().mapToDouble(data -> (int) data.get("blocks")).average().orElse(0.0);
+                    double avgPoints =
+                        stats.stream().mapToDouble(data -> (int) data.get("points")).average().orElse(0.0);
+                    double avgRebounds =
+                        stats.stream().mapToDouble(data -> (int) data.get("rebounds")).average().orElse(0.0);
+                    double avgAssists =
+                        stats.stream().mapToDouble(data -> (int) data.get("assists")).average().orElse(0.0);
+                    double avgSteals =
+                        stats.stream().mapToDouble(data -> (int) data.get("steals")).average().orElse(0.0);
+                    double avgBlocks =
+                        stats.stream().mapToDouble(data -> (int) data.get("blocks")).average().orElse(0.0);
                     double avgFouls = stats.stream().mapToDouble(data -> (int) data.get("fouls")).average().orElse(0.0);
-                    double avgTurnovers = stats.stream().mapToDouble(data -> (int) data.get("turnovers")).average().orElse(0.0);
-                    double avgMinutesPlayed = stats.stream().mapToDouble(data -> (double) data.get("minutes_played")).average().orElse(0.0);
+                    double avgTurnovers =
+                        stats.stream().mapToDouble(data -> (int) data.get("turnovers")).average().orElse(0.0);
+                    double avgMinutesPlayed =
+                        stats.stream().mapToDouble(data -> (double) data.get("minutes_played")).average().orElse(0.0);
                     return Map.ofEntries(
-                        Map.entry("avg_points", avgPoints), Map.entry("avg_rebounds", avgRebounds), Map.entry("avg_assists", avgAssists),
-                        Map.entry("avg_steals", avgSteals), Map.entry("avg_blocks", avgBlocks), Map.entry("avg_fouls", avgFouls),
-                        Map.entry("avg_turnovers", avgTurnovers), Map.entry("avg_minutes_played", avgMinutesPlayed), Map.entry("count_of_rows", (double) count)
+                        Map.entry("avg_points", avgPoints), Map.entry("avg_rebounds", avgRebounds), Map.entry(
+                            "avg_assists", avgAssists),
+                        Map.entry("avg_steals", avgSteals), Map.entry("avg_blocks", avgBlocks), Map.entry("avg_fouls"
+                            , avgFouls),
+                        Map.entry("avg_turnovers", avgTurnovers), Map.entry("avg_minutes_played", avgMinutesPlayed),
+                        Map.entry("count_of_rows", (double) count)
                     );
                 }
             ));
@@ -202,13 +215,18 @@ public class InitializationFlowTest implements TestPropertyProvider {
         Flux.from(dslContext.batch(
             playerStats.entrySet().stream().map(entry ->
                 dslContext.insertInto(table("statistics_players"),
-                        field("player_name"), field("season_name"), field("avg_points"), field("avg_rebounds"), field("avg_assists"),
-                        field("avg_steals"), field("avg_blocks"), field("avg_fouls"), field("avg_turnovers"), field("avg_minutes_played"),
+                        field("player_name"), field("season_name"), field("avg_points"), field("avg_rebounds"),
+                        field("avg_assists"),
+                        field("avg_steals"), field("avg_blocks"), field("avg_fouls"), field("avg_turnovers"), field(
+                            "avg_minutes_played"),
                         field("count_of_rows"), field("updated_at"))
                     .values(
-                        entry.getKey(), "2023-2024", entry.getValue().get("avg_points"), entry.getValue().get("avg_rebounds"),
-                        entry.getValue().get("avg_assists"), entry.getValue().get("avg_steals"), entry.getValue().get("avg_blocks"),
-                        entry.getValue().get("avg_fouls"), entry.getValue().get("avg_turnovers"), entry.getValue().get("avg_minutes_played"),
+                        entry.getKey(), "2023-2024", entry.getValue().get("avg_points"), entry.getValue().get(
+                            "avg_rebounds"),
+                        entry.getValue().get("avg_assists"), entry.getValue().get("avg_steals"),
+                        entry.getValue().get("avg_blocks"),
+                        entry.getValue().get("avg_fouls"), entry.getValue().get("avg_turnovers"),
+                        entry.getValue().get("avg_minutes_played"),
                         entry.getValue().get("count_of_rows").intValue(), new Timestamp(System.currentTimeMillis()))
             ).collect(Collectors.toList())
         )).blockLast();
@@ -222,18 +240,28 @@ public class InitializationFlowTest implements TestPropertyProvider {
                 entry -> {
                     List<Map<String, Object>> stats = entry.getValue();
                     int count = stats.size();
-                    double avgPoints = stats.stream().mapToDouble(data -> (int) data.get("points")).average().orElse(0.0);
-                    double avgRebounds = stats.stream().mapToDouble(data -> (int) data.get("rebounds")).average().orElse(0.0);
-                    double avgAssists = stats.stream().mapToDouble(data -> (int) data.get("assists")).average().orElse(0.0);
-                    double avgSteals = stats.stream().mapToDouble(data -> (int) data.get("steals")).average().orElse(0.0);
-                    double avgBlocks = stats.stream().mapToDouble(data -> (int) data.get("blocks")).average().orElse(0.0);
+                    double avgPoints =
+                        stats.stream().mapToDouble(data -> (int) data.get("points")).average().orElse(0.0);
+                    double avgRebounds =
+                        stats.stream().mapToDouble(data -> (int) data.get("rebounds")).average().orElse(0.0);
+                    double avgAssists =
+                        stats.stream().mapToDouble(data -> (int) data.get("assists")).average().orElse(0.0);
+                    double avgSteals =
+                        stats.stream().mapToDouble(data -> (int) data.get("steals")).average().orElse(0.0);
+                    double avgBlocks =
+                        stats.stream().mapToDouble(data -> (int) data.get("blocks")).average().orElse(0.0);
                     double avgFouls = stats.stream().mapToDouble(data -> (int) data.get("fouls")).average().orElse(0.0);
-                    double avgTurnovers = stats.stream().mapToDouble(data -> (int) data.get("turnovers")).average().orElse(0.0);
-                    double avgMinutesPlayed = stats.stream().mapToDouble(data -> (double) data.get("minutes_played")).average().orElse(0.0);
+                    double avgTurnovers =
+                        stats.stream().mapToDouble(data -> (int) data.get("turnovers")).average().orElse(0.0);
+                    double avgMinutesPlayed =
+                        stats.stream().mapToDouble(data -> (double) data.get("minutes_played")).average().orElse(0.0);
                     return Map.ofEntries(
-                        Map.entry("avg_points", avgPoints), Map.entry("avg_rebounds", avgRebounds), Map.entry("avg_assists", avgAssists),
-                        Map.entry("avg_steals", avgSteals), Map.entry("avg_blocks", avgBlocks), Map.entry("avg_fouls", avgFouls),
-                        Map.entry("avg_turnovers", avgTurnovers), Map.entry("avg_minutes_played", avgMinutesPlayed), Map.entry("count_of_rows", (double) count)
+                        Map.entry("avg_points", avgPoints), Map.entry("avg_rebounds", avgRebounds), Map.entry(
+                            "avg_assists", avgAssists),
+                        Map.entry("avg_steals", avgSteals), Map.entry("avg_blocks", avgBlocks), Map.entry("avg_fouls"
+                            , avgFouls),
+                        Map.entry("avg_turnovers", avgTurnovers), Map.entry("avg_minutes_played", avgMinutesPlayed),
+                        Map.entry("count_of_rows", (double) count)
                     );
                 }
             ));
@@ -242,13 +270,18 @@ public class InitializationFlowTest implements TestPropertyProvider {
         Flux.from(dslContext.batch(
             teamStats.entrySet().stream().map(entry ->
                 dslContext.insertInto(table("statistics_teams"),
-                        field("team_name"), field("season_name"), field("avg_points"), field("avg_rebounds"), field("avg_assists"),
-                        field("avg_steals"), field("avg_blocks"), field("avg_fouls"), field("avg_turnovers"), field("avg_minutes_played"),
+                        field("team_name"), field("season_name"), field("avg_points"), field("avg_rebounds"), field(
+                            "avg_assists"),
+                        field("avg_steals"), field("avg_blocks"), field("avg_fouls"), field("avg_turnovers"), field(
+                            "avg_minutes_played"),
                         field("count_of_rows"), field("updated_at"))
                     .values(
-                        entry.getKey(), "2023-2024", entry.getValue().get("avg_points"), entry.getValue().get("avg_rebounds"),
-                        entry.getValue().get("avg_assists"), entry.getValue().get("avg_steals"), entry.getValue().get("avg_blocks"),
-                        entry.getValue().get("avg_fouls"), entry.getValue().get("avg_turnovers"), entry.getValue().get("avg_minutes_played"),
+                        entry.getKey(), "2023-2024", entry.getValue().get("avg_points"), entry.getValue().get(
+                            "avg_rebounds"),
+                        entry.getValue().get("avg_assists"), entry.getValue().get("avg_steals"),
+                        entry.getValue().get("avg_blocks"),
+                        entry.getValue().get("avg_fouls"), entry.getValue().get("avg_turnovers"),
+                        entry.getValue().get("avg_minutes_played"),
                         entry.getValue().get("count_of_rows").intValue(), new Timestamp(System.currentTimeMillis()))
             ).collect(Collectors.toList())
         )).blockLast();

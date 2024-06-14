@@ -26,6 +26,9 @@
 
     <map name="playerDataMap">
         <in-memory-format>OBJECT</in-memory-format>
+        <backup-count>0</backup-count>
+        <async-backup-count>3</async-backup-count>
+        <read-backup-data>true</read-backup-data>
         <!-- EAGER: Map operations are blocked until the MapStore loads all partitions. -->
         <map-store enabled="true" initial-mode="EAGER">
             <!-- write-behind -->
@@ -36,6 +39,9 @@
 
     <map name="teamDataMap">
         <in-memory-format>OBJECT</in-memory-format>
+        <backup-count>0</backup-count>
+        <async-backup-count>3</async-backup-count>
+        <read-backup-data>true</read-backup-data>
         <map-store enabled="true" initial-mode="EAGER">
             <write-delay-seconds>5</write-delay-seconds>
             <class-name>dev.lapysh.init.TeamStatisticsMapStore</class-name>

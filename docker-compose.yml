@@ -20,7 +20,6 @@ services:
       - MICRONAUT_R2DBC_DATASOURCE_USERNAME=postgres
       - MICRONAUT_R2DBC_DATASOURCE_PASSWORD=postgres
       - DB_HOST=postgres
-#      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
       postgres:
         condition: service_healthy
@@ -28,7 +27,7 @@ services:
       replicas: 3
       resources:
         limits:
-          memory: 500M
+          memory: 700M
           cpus: '2.0'
       restart_policy:
         condition: on-failure
@@ -67,7 +66,7 @@ services:
           cpus: '2.0'
           memory: 500M
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 1s
       timeout: 5s
       retries: 5
@@ -79,13 +78,13 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: 200M
+          cpus: '1.5'
+          memory: 350M
     ports:
       - "8081:8080"
     environment:
       - MC_DEFAULT_CLUSTER=dev
-      - MC_DEFAULT_CLUSTER_MEMBERS=nba-nba-app-1,nba-nba-app-2,nba-nba-app-3
+      - MC_DEFAULT_CLUSTER_MEMBERS=nba-compose-nba-svc-1,nba-compose-nba-svc-2,nba-compose-nba-svc-3
     networks:
       - nba-network
 

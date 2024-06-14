@@ -1,5 +1,3 @@
-// Add new class TeamStatisticsMapStore
-
 package dev.lapysh.init;
 
 import com.hazelcast.core.HazelcastInstance;

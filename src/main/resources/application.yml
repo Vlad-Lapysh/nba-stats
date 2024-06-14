@@ -17,15 +17,14 @@ datasources:
 r2dbc:
   datasources:
     r2dbc:
-      #      url: ${MICRONAUT_R2DBC_DATASOURCE_URL:`r2dbc:pool:postgresql://localhost:5432/postgres`}
       dialect: POSTGRES
       username: ${MICRONAUT_R2DBC_DATASOURCE_USERNAME:postgres}
       password: ${MICRONAUT_R2DBC_DATASOURCE_PASSWORD:postgres}
       host: ${DB_HOST:localhost}
       port: ${DB_PORT:5432}
       options:
-        initial-size: 10
-        max-size: 20
+        initial-size: 20
+        max-size: 60
 liquibase:
   enabled: true
   datasources:

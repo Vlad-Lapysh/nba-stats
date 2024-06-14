@@ -3,9 +3,9 @@ package dev.lapysh.infra.serde;
 import com.hazelcast.nio.serialization.compact.CompactReader;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.nio.serialization.compact.CompactWriter;
+import dev.lapysh.core.MapEntryProcessor;
 import dev.lapysh.in.model.PlayerGameData;
 import dev.lapysh.in.model.PlayerGameDataSerializer;
-import dev.lapysh.core.MapEntryProcessor;
 
 public class MapProcessorSerializer implements CompactSerializer<MapEntryProcessor> {
 

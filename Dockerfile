@@ -19,8 +19,8 @@ ENV JDK_JAVA_OPTIONS="\
     --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED \
     -XX:+UseZGC \
     -XX:+ZGenerational \
-    -Xmx450m \
-    -Xms50m \
+    -Xmx650m \
+    -Xms150m \
     -Dreactor.schedulers.defaultBoundedElasticOnVirtualThreads=true \
     -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 
