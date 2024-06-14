@@ -23,7 +23,7 @@ public class StatsController {
 
     @Get(uri = "/teams", produces = MediaType.APPLICATION_JSON_STREAM)
     public Flux<String> getTeamStatistics(String season) {
-        return service.calculateAndStoreTeamStatistics(season)
+        return service.getTeamStatistics(season)
             .flatMapMany(Flux::fromIterable)
             .flatMap(statistics ->
                 Mono.fromCallable(() -> convertToJsonWithNewline(statistics))
@@ -33,7 +33,7 @@ public class StatsController {
 
     @Get(uri = "/players", produces = MediaType.APPLICATION_JSON_STREAM)
     public Flux<String> getPlayerStatistics(String season) {
-        return service.calculateAndStorePlayerStatistics(season)
+        return service.getPlayerStatistics(season)
             .flatMapMany(Flux::fromIterable)
             .flatMap(statistics ->
                 Mono.fromCallable(() -> convertToJsonWithNewline(statistics))

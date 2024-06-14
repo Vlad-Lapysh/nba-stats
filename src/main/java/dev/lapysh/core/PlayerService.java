@@ -79,7 +79,7 @@ public class PlayerService {
             );
     }
 
-    public Mono<List<PlayerStatistics>> calculateAndStorePlayerStatistics(String seasonName) {
+    public Mono<List<PlayerStatistics>> getPlayerStatistics(String seasonName) {
         return Mono.fromCompletionStage(() -> playerDataMap.getAsync(seasonName))
             .flatMapMany(seasonStats -> Flux.fromIterable(seasonStats.entrySet()))
             .map(entry -> new PlayerStatistics(
@@ -96,7 +96,7 @@ public class PlayerService {
             .collectList();
     }
 
-    public Mono<List<TeamStatistics>> calculateAndStoreTeamStatistics(String seasonName) {
+    public Mono<List<TeamStatistics>> getTeamStatistics(String seasonName) {
         return Mono.fromCompletionStage(() -> teamDataMap.getAsync(seasonName))
             .flatMapMany(seasonStats -> Flux.fromIterable(seasonStats.entrySet()))
             .map(entry -> new TeamStatistics(
