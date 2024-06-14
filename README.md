@@ -1,5 +1,7 @@
 # NBA Player Statistics System
 
+_analysis, implementation details, performance testing_
+
 # Overview
 
 The project implements a scalable system for logging and retrieving NBA player statistics.
@@ -44,11 +46,9 @@ Java, Micronaut, PostgreSQL, Hazelcast, Docker, NGINX, Gradle, Liquibase, JUnit,
 # PACELC Theorem Choices
 
 - **Partition (P) occurs**:
-    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using
-      Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
+    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
 - **Else (E), no partition**:
-    - **Consistency (C) over Latency (L)**: Under normal conditions, the system prioritizes consistency, ensuring that
-      all nodes have the same view of the data, leveraging PostgreSQL's strong consistency guarantees.
+    - **Latency (L) over Consistency (C)**: Under normal conditions, the system prioritizes latency, ensuring low response times and high throughput. This is achieved by keeping all statistics data in memory with Hazelcast, which improves performance even though it may sacrifice some level of consistency.
 
 # Technology/Architecture Decisions
 
@@ -185,7 +185,7 @@ Below is a brief description of the API endpoints:
 
 ### Setup Information:
 
-Used setup from Docker Compose with 3 instances of `nba-svc`:
+Used setup from [Docker Compose](docker-compose.yml) with 3 instances of `nba-svc`:
 
 - **Resources per service**: 2 CPU cores (AMD Ryzen 7 5800X), 700MB RAM
 - **Load profiles**: Only GET, Only POST, GET/POST (20/80)
