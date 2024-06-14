@@ -1,5 +1,0 @@
-r2dbc:
-  datasources:
-    r2dbc:
-      dialect: POSTGRES
-      host: localhost

@@ -32,8 +32,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-        working-directory: nba
 
       - name: Run tests with Gradle
         run: ./gradlew test
-        working-directory: nba
