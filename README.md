@@ -29,7 +29,7 @@ The system provides the following capabilities:
   eventual consistency.
 - **Maintainability**: Modular architecture with clear boundaries and manageable complexity.
 
-## Technologies Used
+# Technologies Used
 
 Java, Micronaut, PostgreSQL, Hazelcast, Docker, NGINX, Gradle, Liquibase, JUnit, Reactive Programming
 
@@ -42,13 +42,6 @@ Java, Micronaut, PostgreSQL, Hazelcast, Docker, NGINX, Gradle, Liquibase, JUnit,
   complexity.
 - **Consistency**: The system should ensure data consistency across different components and services using Hazelcast
   map-store, which provides eventual consistency.
-
-# PACELC Theorem Choices
-
-- **Partition (P) occurs**:
-    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
-- **Else (E), no partition**:
-    - **Latency (L) over Consistency (C)**: Under normal conditions, the system prioritizes latency, ensuring low response times and high throughput. This is achieved by keeping all statistics data in memory with Hazelcast, which improves performance even though it may sacrifice some level of consistency.
 
 # Technology/Architecture Decisions
 
@@ -141,7 +134,7 @@ Below is a brief description of the API endpoints:
       {"teamName":"Brooklyn Nets","avgPoints":21.5,"avgRebounds":7.5,"avgAssists":6.5,"avgSteals":6.0,"avgBlocks":6.5,"avgFouls":2.5,"avgTurnovers":6.5,"avgMinutesPlayed":0.0}
       ```
 
-## Key Internal Concepts
+### Key Internal Concepts
 
 - **Hazelcast Maps**:
     - `playerDataMap`, `teamDataMap`: Stores player and team statistics in-memory, ensuring quick access and real-time
@@ -154,6 +147,13 @@ Below is a brief description of the API endpoints:
       API responses.
     - This approach improves the overall responsiveness of the `/save` endpoint and allows the system to handle a high
       volume of concurrent requests.
+
+#### PACELC Theorem Choices
+
+- **Partition (P) occurs**:
+    - **Availability (A) over Consistency (C)**: In case of network partition, the system favors availability using Hazelcast to ensure the application remains responsive, potentially sacrificing some consistency temporarily.
+- **Else (E), no partition**:
+    - **Latency (L) over Consistency (C)**: Under normal conditions, the system prioritizes latency, ensuring low response times and high throughput. This is achieved by keeping all statistics data in memory with Hazelcast, which improves performance even though it may sacrifice some level of consistency.
 
 ---
 
@@ -218,7 +218,7 @@ Used setup from [Docker Compose](docker-compose.yml) with 3 instances of `nba-sv
 
 </details>
 
-### AWS Cost Estimations
+# AWS Cost Estimations
 
 We'll use the following assumptions:
 
